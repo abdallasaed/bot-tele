@@ -300,10 +300,6 @@ async function deployGithubStream(chatId, session, options = { isRelay: false, i
             `trap 'touch /tmp/stop; if [ -n "$FF_PID" ]; then kill -9 "$FF_PID" 2>/dev/null; fi; sudo pkill -9 -f ffmpeg 2>/dev/null; exit 0' SIGINT SIGTERM EXIT`,
             `( while true; do sleep 3; STOP_CHK=$(curl -s -o /dev/null -w "%{http_code}" -H "Authorization: token \${GH_TOKEN}" "https://api.github.com/repos/\${GH_USER}/\${REPO_NAME}/contents/STOP"); if [ "$STOP_CHK" = "200" ]; then touch /tmp/stop; sudo pkill -9 -f ffmpeg 2>/dev/null; kill -9 $MAIN_PID 2>/dev/null; exit 0; fi; done ) &`,
             `if ! command -v ffmpeg &> /dev/null; then sudo apt-get update -qq && sudo apt-get install -yqq ffmpeg >/dev/null 2>&1; fi`,
-            `sudo sh -c 'rm -f /etc/resolv.conf && echo "nameserver 8.8.8.8" > /etc/resolv.conf'`,
-            `TARGET_HOST=$(echo "\$OUTPUT_URL" | sed -E 's|rtmps?://([^/:]+).*|\\1|')`,
-            `if [ "\$IS_PREEMP" = "0" ]; then send_tg "⏳ جاري الاتصال.. (ننتظر تعرف السيرفر على النطاق)"; fi`,
-            `for i in {1..20}; do if getent ahosts "\$TARGET_HOST" >/dev/null 2>&1; then break; fi; sleep 5; done`,
             
             `if [ "\$IS_PREEMP" = "1" ]; then`,
             `  send_tg "⚡ **استعداد النقل:** المكينة البديلة (\${REPO_NAME}) جاهزة وتنتظر إغلاق القديمة للتدخل فوراً..."`,
